@@ -110,8 +110,9 @@ class vlog_client
             else
             {
                 echo "vLog Read Query: ".$json['count']." entries\n\n";
-                foreach($json['entries'] as $e)
+                for($i=sizeof($json['entries'])-1; --$i; $i>=0)
                 {
+                    $e=$json['entries'][$i];
                     echo "* ".$e['recorded']." ".$e['username']."@".$e['host']." (".$person.")\n";
                     echo trim($e['entry'])."\n\n";
                 }
