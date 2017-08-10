@@ -24,6 +24,7 @@ class vlog_client
         $entry = "";
         $host = "";
         $automatic = 0;
+        $limit = 10;
 
         $interactive = true;
 
@@ -44,6 +45,8 @@ class vlog_client
                 $entry = $a;
             elseif ($a == "--nointeractive" || $a == "-ni")
                 $interactive=false;
+            elseif ($a == "--count" || $a == "-c")
+                $limit=$_SERVER['argv'][++$i];
         }
 
         if ($mode == "w")
@@ -101,7 +104,7 @@ class vlog_client
         }
         elseif($mode == "r")
         {
-            $res = $this->Read($host);
+            $res = $this->Read($host, $limit);
             $json = json_decode($res,true);
             if (!isset($json['type']) || $json['type']!="log")
             {
@@ -138,13 +141,13 @@ class vlog_client
         return $this->POST($this->config['api'],$params);
     }
 
-    function Read($host = "")
+    function Read($host = "", $limit = 10)
     {
         $params = array(
             "m" => "r",
             "key" => $this->config['key'],
             "start" => 0,
-            "limit" => 10,
+            "limit" => $limit,
         );
 
         if ($host != "")
